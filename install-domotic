@@ -1,0 +1,32 @@
+#!/bin/bash
+
+APP_NAME="Domotic for linux installation script"
+VERSION=$(cat ./installation/version)
+
+CONF_DIR="/etc/domotic"
+
+MAIN_CONF_FILE="$CONF_DIR/domotic.conf"
+
+echo "$APP_NAME - $VERSION"
+
+
+
+if [ ! -d $CONF_DIR ]; then
+	
+	echo "creating config directory \"$CONF_DIR\" ..."
+	mkdir $CONF_DIR
+
+else
+
+	echo "purging configuration directory \"$CONF_DIR\" ..."
+	rm $CONF_DIR/*
+
+fi
+
+echo "installing configuration files ..."
+
+echo "$MAIN_CONF_FILE"
+cp ./conf/domotic_default.conf /etc/domotic/domotic.conf
+
+
+
