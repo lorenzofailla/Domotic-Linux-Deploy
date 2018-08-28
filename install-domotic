@@ -9,8 +9,6 @@ MAIN_CONF_FILE="$CONF_DIR/domotic.conf"
 
 echo "$APP_NAME - $VERSION"
 
-
-
 if [ ! -d $CONF_DIR ]; then
 	
 	echo "creating config directory \"$CONF_DIR\" ..."
@@ -28,5 +26,5 @@ echo "installing configuration files ..."
 echo "$MAIN_CONF_FILE"
 cp ./conf/domotic_default.conf /etc/domotic/domotic.conf
 
-
-
+echo "linking executable jar..."
+echo "linking libraries..."
