@@ -7,24 +7,55 @@ CONF_DIR="/etc/domotic"
 
 MAIN_CONF_FILE="$CONF_DIR/domotic.conf"
 
+LOCAL_BIN_FOLDER="/usr/local/bin"
+EXECUTABLE_JAR="domotic.jar"
+LIBRARIES_FOLDER="domotic_lib"
+
 echo "$APP_NAME - $VERSION"
 
 if [ ! -d $CONF_DIR ]; then
-	
-	echo "creating config directory \"$CONF_DIR\" ..."
+	#
+	echo "Creating config directory \"$CONF_DIR\" ..."
 	mkdir $CONF_DIR
 
 else
-
-	echo "purging configuration directory \"$CONF_DIR\" ..."
+	#
+	echo "Purging configuration directory \"$CONF_DIR\" ..."
 	rm $CONF_DIR/*
 
 fi
 
-echo "installing configuration files ..."
+echo "Installing configuration files ..."
 
 echo "$MAIN_CONF_FILE"
 cp ./conf/domotic_default.conf /etc/domotic/domotic.conf
 
-echo "linking executable jar..."
-echo "linking libraries..."
+echo "Linking executable jar..."
+
+if [ -h "$LOCAL_BIN_FOLDER/$EXECUTABLE_JAR" ]; then
+
+	# purge local bin directory
+	echo "Ppurging local bin directory \"$LOCAL_BIN_FOLDER\""
+	rm "$LOCAL_BIN_FOLDER/$EXECUTABLE_JAR"
+
+fi
+
+#
+ln -s "./$EXECUTABLE_JAR" "$LOCAL_BIN_FOLDER/$EXECUTABLE_JAR"
+
+echo "Linking libraries..."
+
+if [ -h "$LOCAL_BIN_FOLDER/$LIBRARIES_FOLDER" ]; then
+
+	#
+	echo "Purging libraries folder \"$LOCAL_BIN_FOLDER/$LIBRARIES_FOLDER\" ..."
+	rm -r "$LOCAL_BIN_FOLDER/$LIBRARIES_FOLDER"
+
+fi
+
+ln -s "./$LIBRARIES_FOLDER" "$LOCAL_BIN_FOLDER/$LIBRARIES_FOLDER"
+
+echo "Restarting $APP_NAME..."
+
+/etc/init.d/domotic.sh restart
+
