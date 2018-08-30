@@ -4,8 +4,11 @@ APP_NAME="Domotic for linux installation script"
 VERSION=$(cat ./installation/version)
 
 CONF_DIR="/etc/domotic"
-
 MAIN_CONF_FILE="$CONF_DIR/domotic.conf"
+
+# ottiene il percorso assoluto alla cartella dello script
+cd $(dirname $BASH_SOURCE[0])
+LOCAL_INSTALLATION_FOLDER=$(pwd)
 
 LOCAL_BIN_FOLDER="/usr/local/bin"
 EXECUTABLE_JAR="domotic.jar"
@@ -21,14 +24,14 @@ if [ ! -d $CONF_DIR ]; then
 else
 	#
 	echo "Purging configuration directory \"$CONF_DIR\" ..."
-	rm $CONF_DIR/*
+	rm $MAIN_CONF_FILE
 
 fi
 
 echo "Installing configuration files ..."
 
 echo "$MAIN_CONF_FILE"
-cp ./conf/domotic_default.conf /etc/domotic/domotic.conf
+cp "$LOCAL_INSTALLATION_FOLDER/conf/domotic_default.conf" /etc/domotic/domotic.conf
 
 echo "Linking executable jar..."
 
@@ -41,7 +44,7 @@ if [ -h "$LOCAL_BIN_FOLDER/$EXECUTABLE_JAR" ]; then
 fi
 
 #
-ln -s "./$EXECUTABLE_JAR" "$LOCAL_BIN_FOLDER/$EXECUTABLE_JAR"
+ln -s "$LOCAL_INSTALLATION_FOLDER/$EXECUTABLE_JAR" "$LOCAL_BIN_FOLDER/$EXECUTABLE_JAR"
 
 echo "Linking libraries..."
 
@@ -53,9 +56,8 @@ if [ -h "$LOCAL_BIN_FOLDER/$LIBRARIES_FOLDER" ]; then
 
 fi
 
-ln -s "./$LIBRARIES_FOLDER" "$LOCAL_BIN_FOLDER/$LIBRARIES_FOLDER"
+ln -s "$LOCAL_INSTALLATION_FOLDER/$LIBRARIES_FOLDER" "$LOCAL_BIN_FOLDER/$LIBRARIES_FOLDER"
 
 echo "Restarting $APP_NAME..."
 
 /etc/init.d/domotic.sh restart
-
