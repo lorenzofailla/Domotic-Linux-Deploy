@@ -4,6 +4,8 @@ APP_NAME="Domotic"
 INSTALLER_NAME="Domotic for linux installation script"
 VERSION=$(cat ./installation/version)
 
+RESTART_COMMAND="/etc/init.d/domotic.sh restart"
+
 CONF_DIR="/etc/domotic"
 MAIN_CONF_FILE="$CONF_DIR/domotic.conf"
 
