@@ -1,6 +1,7 @@
 #!/bin/bash
 
-APP_NAME="Domotic for linux installation script"
+APP_NAME="Domotic"
+INSTALLER_NAME="Domotic for linux installation script"
 VERSION=$(cat ./installation/version)
 
 CONF_DIR="/etc/domotic"
@@ -14,24 +15,33 @@ LOCAL_BIN_FOLDER="/usr/local/bin"
 EXECUTABLE_JAR="domotic.jar"
 LIBRARIES_FOLDER="domotic_lib"
 
-echo "$APP_NAME - $VERSION"
+echo "$INSTALLER_NAME - $VERSION"
 
-if [ ! -d $CONF_DIR ]; then
-	#
-	echo "Creating config directory \"$CONF_DIR\" ..."
-	mkdir $CONF_DIR
+if [ ! -h $MAIN_CONF_FILE ]; then
+	# configuration file does not exist
+	
+	if [ ! -d $CONF_DIR ]; then
+		# if configuration directory does not exist, create it
+		echo "Creating config directory \"$CONF_DIR\" ..."
+		mkdir $CONF_DIR
+	fi
+	
+	echo "Installing configuration files ..."
+
+	echo "$MAIN_CONF_FILE"
+	cp "$LOCAL_INSTALLATION_FOLDER/conf/domotic_default.conf" $MAIN_CONF_FILE
+	
+	CONFIGURATION_MESSAGE="A default configuration file has been created in your local directory \"$CONF_DIR\".
+	Fill it according to the actual configuration you want to obtain, following the instructions in the configuration file itself.
+	You may simply type \"sudo nano $MAIN_CONF_FILE\" in order to edit the configuration file."
 
 else
 	#
-	echo "Purging configuration directory \"$CONF_DIR\" ..."
-	rm $MAIN_CONF_FILE
-
+	echo "Existing configuration file found."
+	CONFIGURATION_MESSAGE=""
+	
 fi
 
-echo "Installing configuration files ..."
-
-echo "$MAIN_CONF_FILE"
-cp "$LOCAL_INSTALLATION_FOLDER/conf/domotic_default.conf" /etc/domotic/domotic.conf
 
 echo "Linking executable jar..."
 
@@ -58,6 +68,4 @@ fi
 
 ln -s "$LOCAL_INSTALLATION_FOLDER/$LIBRARIES_FOLDER" "$LOCAL_BIN_FOLDER/$LIBRARIES_FOLDER"
 
-echo "Restarting $APP_NAME..."
-
-/etc/init.d/domotic.sh restart
+echo "Type $RESTART_COMMAND to restart $APP_NAME."
