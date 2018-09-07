@@ -19,7 +19,7 @@ LIBRARIES_FOLDER="domotic_lib"
 
 echo "$INSTALLER_NAME - $VERSION"
 
-if [ ! -h $MAIN_CONF_FILE ]; then
+if [ ! -f $MAIN_CONF_FILE ]; then
 	# configuration file does not exist
 	
 	if [ ! -d $CONF_DIR ]; then
