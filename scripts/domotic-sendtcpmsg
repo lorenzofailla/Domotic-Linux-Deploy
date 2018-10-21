@@ -39,3 +39,7 @@ fi
 # TODO: recupera il numero della porta
 PORT=9099
 
+MESSAGE="@COMMAND?HEADER=__connect_vpn&BODY=-
+@EXIT"
+
+echo $MESSAGE | nc "localhost $PORT"
