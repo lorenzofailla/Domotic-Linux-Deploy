@@ -1,0 +1,36 @@
+#!/bin/sh
+
+SERVICE_NAME_SHORT="disconnect-vpn"
+SERVICE_NAME="$SERVICE_NAME_SHORT :: OpenVPN background disconnection script :: by Lorenzo Failla"
+
+echo
+echo $SERVICE_NAME
+
+# controlla il numero di parametri passati in argomento, se il numero è errato stampa un messaggio di errore ed esce
+if [ $# != 0 ]; then
+
+	echo
+	echo "Usage: $SERVICE_NAME_SHORT"
+	echo "Wrong number of parameters passed. Expected: 0, Actual: $#"
+	echo
+	exit 1
+
+fi
+
+# il numero di parametri è corretto
+PID_FILE_NAME="/tmp/connect-vpn.pid"
+
+# non se esiste il file di pid, stampa un messaggio di errore ed esce
+if [ ! -f $PID_FILE_NAME ]; then
+
+	echo
+	echo "$SERVICE_NAME_SHORT is not running."
+	exit 2
+
+fi
+
+# effettua il kill del processo il cui ID era stato scritto nel file
+kill $(cat "$PID_FILE_NAME")
+
+# rimuove il file di pid
+rm $PID_FILE_NAME

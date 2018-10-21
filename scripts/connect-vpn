@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# definizione variabili
+CONFIG_FILE_PATH="/etc/domotic.conf"
+SERVICE_NAME_SHORT="connect-vpn"
+SERVICE_NAME="$SERVICE_NAME_SHORT :: OpenVPN background connection script :: by Lorenzo Failla"
+
+echo
+echo $SERVICE_NAME
+
+# controlla il numero di parametri passati in argomento, se il numero è errato stampa un messaggio di errore ed esce
+if [ $# != 0 ]; then
+
+	echo
+	echo "Usage: $SERVICE_NAME_SHORT"
+	echo "Wrong number of parameters passed. Expected: 0, Actual: $#"
+	echo
+	exit 1
+
+fi
+
+# il numero di parametri è corretto
+
+# verifica che esista il file di configurazione.
+# se non esiste, stampa un messaggio di errore ed esce
+
+if [ ! -f "$CONFIG_FILE_PATH" ]; then
+	# il file di configurazione non esiste
+	# stampa un messaggio di errore ed esce
+
+	echo "Configuration file $CONFIG_FILE_PATH cannot be found."
+	exit 2
+
+fi
+
+# recupero il percorso del file di congigurazione per la connessione a OpenVPN
+
+VPN_CNF_PATH_LINE=$(cat "$CONFIG_FILE_PATH" | grep VPNConfigFile)
+
+if [ "$VPN_CNF_PATH_LINE" == "" ]; then
+
+	# il parametro di configurazione 'VPNConfigFile' non esiste
+	# stampa un messaggio di errore ed esce
+
+	echo "Configuration parameter 'VPNConfigFile' cannot be found in configuration file"
+	exit 3
+fi
+
+VPN_CNF_PATH_SEPARATOR_INDEX=$(expr index "$VPN_CNF_PATH_LINE" =)
+VPN_CNF_PATH=${VPN_CNF_PATH_LINE:VPN_CNF_PATH_SEPARATOR_INDEX}
+
+echo "Path of OpenVPN configuration file: $VPN_CNF_PATH"
+
+PID_FILE_NAME="/tmp/$SERVICE_NAME_SHORT.pid"
+LOG_FILE_NAME="/tmp/$SERVICE_NAME_SHORT.log"
+
+# se esiste il file di pid, stampa un messaggio di errore ed esce
+if [ -f $PID_FILE_NAME ]; then
+
+	echo
+	echo "$SERVICE_NAME_SHORT is already running."
+	exit 4
+
+fi
+
+nohup openvpn --config $VPN_CNF_PATH > $LOG_FILE_NAME &
+
+echo $! > $PID_FILE_NAME
+
+exit 0
