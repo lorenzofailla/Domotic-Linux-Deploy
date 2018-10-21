@@ -1,0 +1,41 @@
+#!/bin/bash
+
+SCRIPT_NAME="domotic-sendtcpmsg"
+CONFIG_FILE_PATH="/etc/domotic/domotic.conf"
+
+ERRCODE___WRONG_NUMBER_OF_PARAMETERS=1
+ERRCODE___NO_CONFIG_FILE=2
+
+
+# verifica che il numero di argomenti passati in argomento sia corretto
+# altrimenti stampa un messaggio di errore ed esce
+if [ $# != 2 ]; then
+	# il numero di argomenti non è corretto.
+	# stampa un messaggio di errore ed esce
+	
+	echo "Wrong number of parameters passed. Expected: 2, Actual: $#
+Usage: $SCRIPT_NAME command-header command-body"
+
+	exit $ERRCODE___WRONG_NUMBER_OF_PARAMETERS
+	
+fi
+
+# il numero di argomenti è corretto.
+
+# verifica che esista il file di configurazione.
+# se non esiste, stampa un messaggio di errore ed esce
+
+if [ ! -f "$CONFIG_FILE_PATH" ]; then
+	# il file di configurazione non esiste
+	# stampa un messaggio di errore ed esce
+
+	echo "Configuration file $CONFIG_FILE_PATH cannot be found."
+	exit $ERRCODE___NO_CONFIG_FILE
+
+fi
+
+# il file di configurazione esiste
+
+# TODO: recupera il numero della porta
+PORT=9099
+
