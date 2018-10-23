@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# script by Lorenzo Failla
+echo "*** DOMOTIC SERVER for LINUX - Updater - By Lorenzo Failla ***"
+
+# recupera l'ultima versione del progetto
+echo "Retrieving last version of project files from GitHub..."
+git pull origin master
+
+# ottiene il percorso assoluto alla cartella dello script
+cd $(dirname $BASH_SOURCE[0])
+LOCAL_INSTALLATION_FOLDER=$(pwd)
+
+# modifica le credenziali d'accesso per i file di script
+echo "Changing scripts file ownership..."
+chmod 706 $LOCAL_INSTALLATION_FOLDER/domotic-install
+chmod 706 $LOCAL_INSTALLATION_FOLDER/domotic-update
+chmod 706 $LOCAL_INSTALLATION_FOLDER/scripts/*
+
+echo "Launching installer..."
+$LOCAL_INSTALLATION_FOLDER/domotic-install
