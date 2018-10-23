@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # definizione variabili
-CONFIG_FILE_PATH="/etc/domotic.conf"
+CONFIG_FILE_PATH="/etc/domotic/domotic.conf"
 SERVICE_NAME_SHORT="connect-vpn"
 SERVICE_NAME="$SERVICE_NAME_SHORT :: OpenVPN background connection script :: by Lorenzo Failla"
 
