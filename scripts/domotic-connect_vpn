@@ -1,0 +1,121 @@
+#!/bin/bash
+
+# definizione variabili
+CONFIG_FILE_PATH="/etc/domotic/domotic.conf"
+SERVICE_NAME_SHORT="domotic-connect_vpn"
+SERVICE_NAME="$SERVICE_NAME_SHORT\nOpenVPN background connection script for DOMOTIC Linux Server.\nby Lorenzo Failla."
+
+EXIT_CODE_SUCCESS=0
+EXIT_CODE_TIMEOUT=5
+
+echo -e $SERVICE_NAME
+
+# controlla il numero di parametri passati in argomento, se il numero è errato stampa un messaggio di errore ed esce
+if [ $# != 0 ]; then
+
+	echo
+	echo "Usage: $SERVICE_NAME_SHORT"
+	echo "Wrong number of parameters passed. Expected: 0, Actual: $#."
+	echo
+	exit 1
+
+fi
+
+# il numero di parametri è corretto
+
+# verifica che esista il file di configurazione.
+# se non esiste, stampa un messaggio di errore ed esce
+
+if [ ! -f "$CONFIG_FILE_PATH" ]; then
+	# il file di configurazione non esiste
+	# stampa un messaggio di errore ed esce
+
+	echo "Configuration file $CONFIG_FILE_PATH cannot be found."
+	exit 2
+
+fi
+
+# recupero il percorso del file di congigurazione per la connessione a OpenVPN
+
+VPN_CNF_PATH_LINE=$(cat "$CONFIG_FILE_PATH" | grep VPNConfigFile)
+
+if [ "$VPN_CNF_PATH_LINE" == "" ]; then
+
+	# il parametro di configurazione 'VPNConfigFile' non esiste
+	# stampa un messaggio di errore ed esce
+
+	echo "Configuration parameter 'VPNConfigFile' cannot be found in configuration file."
+	exit 3
+fi
+
+VPN_CNF_PATH_SEPARATOR_INDEX=$(expr index "$VPN_CNF_PATH_LINE" =)
+VPN_CNF_PATH=${VPN_CNF_PATH_LINE:VPN_CNF_PATH_SEPARATOR_INDEX}
+
+echo "Path of OpenVPN configuration file: $VPN_CNF_PATH"
+
+PID_FILE_NAME="/tmp/$SERVICE_NAME_SHORT.pid"
+LOG_FILE_NAME="/tmp/$SERVICE_NAME_SHORT.log"
+
+# se esiste il file di pid, controlla che esista una connessione
+if [ -f $PID_FILE_NAME ]; then
+
+	VPN_IP=$(show-vpn-ip)
+		
+	if [ $VPN_IP != "<not-connected>" ]; then
+	# esiste una connessione stampa un messaggio di informazione ed esce
+
+	echo "$SERVICE_NAME_SHORT is already running. VPN IP address is: $VPN_IP."
+	exit $EXIT_CODE_SUCCESS
+
+	else
+	# non esiste una connessione - esegue il kill del processo e cancella il file PID
+	PID=$(cat $PID_FILE_NAME)
+	echo "$SERVICE_NAME_SHORT process found, but no VPN connection. Restarting the process: $PID."
+	kill $PID
+	rm $PID_FILE_NAME
+
+	fi
+
+fi
+
+nohup openvpn --config $VPN_CNF_PATH > $LOG_FILE_NAME &
+
+echo $! > $PID_FILE_NAME
+
+# Controlla che venga realizzata la connessione entro il timeout specificato
+
+TIMEOUT=15
+TIME=0
+
+while [ $TIME -lt $TIMEOUT ]
+do
+	
+	VPN_IP=$(show-vpn-ip)
+		
+	if [ $VPN_IP != "<not-connected>" ]; then
+		
+		# connessione VPN avvenuta
+		echo "VPN is connected!"
+
+		# invia un comando TCP al server domotic
+
+		# esce
+		exit 0
+
+	fi
+
+	sleep 1
+	TIME=$(($TIME+1))
+
+done
+
+# E' stato raggiunto il timeout senza che la connessione sia avvenuta.
+# Procede al kill del processo openVPN
+
+PID=$(cat $PID_FILE_NAME)
+
+echo "Timeout reached waiting for VPN connection. Killing process $PID."
+kill $PID
+rm $PID_FILE_NAME
+
+exit $EXIT_CODE_TIMEOUT
