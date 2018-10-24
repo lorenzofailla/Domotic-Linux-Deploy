@@ -17,7 +17,7 @@ if [ $# != 0 ]; then
 fi
 
 # il numero di parametri è corretto
-PID_FILE_NAME="/tmp/connect-vpn.pid"
+PID_FILE_NAME="/tmp/domotic-connect_vpn.pid"
 
 # non se esiste il file di pid, stampa un messaggio di errore ed esce
 if [ ! -f $PID_FILE_NAME ]; then

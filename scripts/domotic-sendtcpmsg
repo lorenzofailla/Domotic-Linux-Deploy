@@ -39,10 +39,8 @@ fi
 # TODO: recupera il numero della porta
 PORT=9099
 
-MESSAGE="@COMMAND?header=$1&body=$2
-@EXIT
-"
+MESSAGE="@COMMAND?header=$1&body=$2\n@EXIT\n"
 
-echo "echo -e -n \"$MESSAGE\" | nc localhost $PORT"
+echo "echo -e -n $MESSAGE | nc localhost $PORT"
 
-echo -n -e "\"$MESSAGE\"" | nc localhost $PORT
+echo -n -e $MESSAGE | nc localhost $PORT
