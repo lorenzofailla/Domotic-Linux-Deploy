@@ -1,8 +1,0 @@
-#!/bin/bash
-
-git stash
-git pull origin master
-chmod u+x ./scripts/*
-ln -s ./scripts/* /usr/local/bin
-./install-domotic
- 
