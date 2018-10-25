@@ -97,8 +97,9 @@ do
 		# connessione VPN avvenuta
 		echo "VPN is connected!"
 
-		# invia un comando TCP al server domotic
-
+		# invia un comando tcp al server domotic per chiedere l'aggiornamento dei parametri nel database
+		domotic-sendtcpmsg __update_vpn_status null
+		
 		# esce
 		exit 0
 

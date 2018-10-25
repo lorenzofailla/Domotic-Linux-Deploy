@@ -23,7 +23,7 @@ PID_FILE_NAME="/tmp/domotic-connect_vpn.pid"
 if [ ! -f $PID_FILE_NAME ]; then
 
 	echo
-	echo "$SERVICE_NAME_SHORT is not running."
+	echo "No PID found."
 	exit 2
 
 fi
@@ -34,4 +34,32 @@ kill $(cat "$PID_FILE_NAME")
 # rimuove il file di pid
 rm $PID_FILE_NAME
 
-# invia un comando tcp al server domotic per chiedere l'aggiornamento dei parametri nel database
+# Controlla che venga realizzata la connessione entro il timeout specificato
+
+TIMEOUT=15
+TIME=0
+
+while [ $TIME -lt $TIMEOUT ]
+do
+	
+	VPN_IP=$(show-vpn-ip)
+		
+	if [ $VPN_IP = "<not-connected>" ]; then
+		
+		# disconnessione VPN avvenuta
+		echo "VPN is disconnected!"
+
+		# invia un comando tcp al server domotic per chiedere l'aggiornamento dei parametri nel database
+		domotic-sendtcpmsg __update_vpn_status null
+		
+		# esce
+		exit 0
+
+	fi
+
+	sleep 1
+	TIME=$(($TIME+1))
+
+done
+
+# da gestire: invia un comando tcp al server domotic per chiedere l'inserimento di un messaggio di log
