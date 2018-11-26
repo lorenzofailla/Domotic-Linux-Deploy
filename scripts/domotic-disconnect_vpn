@@ -42,7 +42,7 @@ TIME=0
 while [ $TIME -lt $TIMEOUT ]
 do
 	
-	VPN_IP=$(show-vpn-ip)
+	VPN_IP=$(domotic-show_vpn_ip)
 		
 	if [ $VPN_IP = "<not-connected>" ]; then
 		
