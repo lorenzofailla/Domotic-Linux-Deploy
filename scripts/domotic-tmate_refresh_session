@@ -1,0 +1,12 @@
+#!/bin/bash
+
+TMATE_REPLY=$(tmate -S /tmp/tmate.sock list-sessions)
+
+if [ ! "$TMATE_REPLY" == "" ]; then
+
+	tmate -S /tmp/tmate.sock kill-session
+
+fi
+
+tmate -S /tmp/tmate.sock new-session -d
+tmate -S /tmp/tmate.sock wait tmate-ready

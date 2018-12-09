@@ -1,0 +1,13 @@
+#!/bin/bash
+
+TMATE_REPLY=$(tmate -S /tmp/tmate.sock list-sessions)
+
+if [ "$TMATE_REPLY" == "" ]; then
+
+	echo "<no tmate active session>"
+
+else
+
+	echo $(tmate -S /tmp/tmate.sock display -p '#{tmate_web}')
+
+fi

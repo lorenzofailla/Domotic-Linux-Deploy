@@ -24,7 +24,7 @@ if [ ! -f $MAIN_CONF_FILE ]; then
 	
 	if [ ! -d $CONF_DIR ]; then
 		# if configuration directory does not exist, create it
-		echo "Creating config directory \"$CONF_DIR\" ..."
+		echo "Creating config directory \"$CONF_DIR\" ..."etc
 		mkdir $CONF_DIR
 	fi
 	
@@ -74,6 +74,14 @@ rm $LOCAL_BIN_FOLDER/domotic-*
 
 echo "Linking new scripts to local bin directory \"$LOCAL_BIN_FOLDER\""
 ln -s $LOCAL_INSTALLATION_FOLDER/scripts/* $LOCAL_BIN_FOLDER
+
+echo "Managing autostart scripts..."
+
+if [ -f /etc/init.d/domotic ]; then
+	rm /etc/init.d/domotic
+fi
+
+cp $LOCAL_INSTALLATION_FOLDER/installation/bootscripts/domotic /etc/init.d
 
 echo -e $CONFIGURATION_MESSAGE
 
