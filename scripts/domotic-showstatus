@@ -1,0 +1,10 @@
+#!/bin/bash
+
+REPLY=$(domotic-gettcpreply __update_status status_text)
+
+SUBSTRING=${REPLY#*@REPLY?header=STATUS_TEXT_REPLY&body=}
+SUBSTRING=${SUBSTRING%&replyto=*}
+OUTPUT=$(base64 -d <<< $SUBSTRING)
+
+echo -e "$OUTPUT"
+

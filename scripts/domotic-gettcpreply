@@ -39,11 +39,11 @@ fi
 # TODO: recupera il numero della porta
 PORT=9099
 
-MESSAGE="@COMMAND?header=$1&body=$2\n"
+REPLY=$(
+nc localhost 9099 << EOF
+@MODE-EXITATCOMMAND
+@COMMAND?header=$1&body=$2
+EOF
+)
 
-#echo "echo -e -n $MESSAGE | nc localhost $PORT"
-
-REPLY=$(echo -n -e $MESSAGE | nc localhost $PORT)
-
-echo "Reply from system was: $REPLY"
-
+echo -n "$REPLY"
