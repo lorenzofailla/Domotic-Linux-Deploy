@@ -10,7 +10,7 @@ RAW_OUTPUT=$(ip -br address show | grep 'tun0')
 
 if [ "$RAW_OUTPUT" == "" ]; then
 
-	echo "<not-connected>"
+	echo -n  "<not-connected>"
 
 else
 
@@ -25,6 +25,6 @@ else
 	IP_SEPARATOR_INDEX=$(expr index "$TRIM_LEADING" " ")
 	PLAIN_IP=${TRIM_LEADING:0:IP_SEPARATOR_INDEX}
 
-	echo "$PLAIN_IP"
+	echo -n "$PLAIN_IP"
 
 fi
