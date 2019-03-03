@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 APP_NAME="Domotic"
 INSTALLER_NAME="Domotic for linux installation script"
 VERSION=$(cat ./installation/version)
