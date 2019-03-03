@@ -1,5 +1,11 @@
 #!/bin/bash
 
-ffmpeg -nostats -loglevel 0 -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -r $2 -i $3 -r $2 -f flv rtmp://a.rtmp.youtube.com/$4 -t $5
+TIMESTAMP=$(date +"%Y-%m-%d %T")
+echo "Process started on $TIMESTAMP"
+
+ffmpeg -nostats -loglevel 1 -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -r $2 -i $3 -r $2 -vcodec libx264 -f flv -t $5 rtmp://a.rtmp.youtube.com/live2/$4
+
+TIMESTAMP=$(date +"%Y-%m-%d %T")
+echo "Process ended on $TIMESTAMP"
 
 domotic-youtube_livestream_stop $1 --nokill
