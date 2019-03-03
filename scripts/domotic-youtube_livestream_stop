@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 PID_FILE="$PID_FILE_PATH/domotic-YTLiveStream_$1.pid" # definisce il percorso del file PID
 
 if [ -f "$PID_FILE" ]; then # esiste già un processo in corso
