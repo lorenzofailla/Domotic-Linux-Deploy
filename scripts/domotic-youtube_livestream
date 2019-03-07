@@ -1,9 +1,11 @@
 #!/bin/bash
 
+domotic-sendtcpmsg __start_streaming_notification $1
+
 TIMESTAMP=$(date +"%Y-%m-%d %T")
 echo "Process started on $TIMESTAMP"
 
-ffmpeg -nostats -loglevel 1 -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -r $2 -i $3 -r $2 -vcodec libx264 -f flv -t $5 rtmp://a.rtmp.youtube.com/live2/$4
+ffmpeg -nostats -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -r $2 -i $3 -r $2 -vcodec libx264 -f flv -t $5 rtmp://a.rtmp.youtube.com/live2/$4
 
 TIMESTAMP=$(date +"%Y-%m-%d %T")
 echo "Process ended on $TIMESTAMP"

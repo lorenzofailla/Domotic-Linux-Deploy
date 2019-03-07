@@ -21,3 +21,5 @@ if [ -f "$PID_FILE" ]; then # esiste già un processo in corso
 else
 	echo "PID file $PID_FILE not found."
 fi
+
+domotic-sendtcpmsg __end_streaming_notification $1
