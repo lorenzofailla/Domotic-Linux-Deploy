@@ -1,6 +1,11 @@
 #!/bin/bash
 
-TMATE_REPLY=$(tmate -S /tmp/tmate.sock list-sessions)
+TMATE_REPLY=""
+if [ -f /tmp/tmate.sock ]; then
+
+	TMATE_REPLY=$(tmate -S /tmp/tmate.sock list-sessions)
+	
+fi
 
 if [ ! "$TMATE_REPLY" == "" ]; then
 
