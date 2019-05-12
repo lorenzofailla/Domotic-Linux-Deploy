@@ -1,19 +1,25 @@
 #!/bin/bash
 
-PID_FILE="$PID_FILE_PATH/domotic-YTLiveStream_$1.pid" # definisce il percorso del file PID
+PID_FILE_DIRECTORY="/tmp"
+PID_FILE="$PID_FILE_DIRECTORY/domotic-YTLiveStream_$1.pid" # definisce il percorso del file PID
 
 if [ -f "$PID_FILE" ]; then # esiste già un processo in corso
 
 	echo "PID file found."
 	
-	if [ $2 != "--nokill" ]; then
+	if [ "$2" != "--nokill" ]; then
 	
 		# uccide il processo
-		kill $(cat $PID_FILE)
+		pkill -TERM -P $(cat $PID_FILE)
+		echo "Process killed."
 	
 	fi
 	
 	rm $PID_FILE
-	echo "Process killed."
+	echo "PID file removed."
 
+else
+	echo "PID file $PID_FILE not found."
 fi
+
+domotic-sendtcpmsg __end_streaming_notification $1

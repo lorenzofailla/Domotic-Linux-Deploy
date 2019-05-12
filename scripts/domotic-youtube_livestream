@@ -1,5 +1,19 @@
 #!/bin/bash
 
-ffmpeg -nostats -loglevel 0 -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -r $2 -i $3 -r $2 -f flv rtmp://a.rtmp.youtube.com/$4 -t $5
+echo "Parameter n.1: $1"
+echo "Parameter n.2: $2"
+echo "Parameter n.3: $3"
+echo "Parameter n.4: $4"
+echo "Parameter n.5: $5"
+
+domotic-sendtcpmsg __start_streaming_notification $1
+
+TIMESTAMP=$(date +"%Y-%m-%d %T")
+echo "Process started on $TIMESTAMP"
+
+ffmpeg -loglevel 0 -nostats -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -r $2 -i $3 -r $2 -vcodec libx264 -f flv -t $5 rtmp://a.rtmp.youtube.com/live2/$4
+
+TIMESTAMP=$(date +"%Y-%m-%d %T")
+echo "Process ended on $TIMESTAMP"
 
 domotic-youtube_livestream_stop $1 --nokill

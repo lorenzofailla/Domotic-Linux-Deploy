@@ -1,0 +1,8 @@
+#!/bin/bash
+
+/etc/init.d/domotic stop
+killall -v -g -s SIGKILL java
+killall -v -g -s SIGKILL motion
+/etc/init.d/domotic start
+
+tailf /var/log/domotic.log
