@@ -1,0 +1,11 @@
+#!/bin/bash
+
+REPLY=$(domotic-gettcpreply $1 -)
+
+SUBSTRING=${REPLY##*&body=}
+SUBSTRING=${SUBSTRING%%&replyto=*}
+
+OUTPUT=$(base64 -i -d <<< "$SUBSTRING")
+
+echo -e "$OUTPUT"
+

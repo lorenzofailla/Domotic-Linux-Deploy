@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REPLY=$(domotic-gettcpreply __update_status status_text)
+REPLY=$(domotic-gettcpreply __update_status ${2})
 
 SUBSTRING=${REPLY#*@REPLY?header=STATUS_TEXT_REPLY&body=}
 SUBSTRING=${SUBSTRING%&replyto=*}
